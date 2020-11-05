@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Calculator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+
+<div class="buttons">
+  <div class="screen"><div id="display"><div id="output">0</div></div>
+</div>
+   
+<div class="keys">
+  <div id="one">1</div>
+  <div id="two">2</div>
+  <div id="three">3</div>
+  <div id="four">4</div>
+  <div id="five">5</div>
+  <div id="six">6</div>
+  <div id="seven">7</div>
+  <div id="eight">8</div>
+  <div id="nine">9</div>
+  <div id="zero">0</div>
+  <div id="dec">.</div>
+  <div id="percent">%</div>
+</div>
+
+<div class="operations">
+  <div id="AC">AC</div>
+  <div id="plus">+</div>
+  <div id="minus">-</div>
+  <div id="mult">x</div>
+  <div id="div">/</div>
+  <div id="equals">=</div>
+</div>
+</div>
+</div>
+
+<script>
+
+//basic math functions
+const add = (a,b) => a+b;
+const subtract = (a,b) => a-b;
+const multiply= (a,b) => a*b;
+const divide = (a,b) => a/b;
+
+//function for all math operations
+const operate = (a,b,op) => {
+    if(a === undefined || a==="") {
+      if (op==="x") {
+        a=1;
+      }
+      else if (op==="/") {
+        a=b;
+        b=1;
+      }
+      else if (op==="-") {
+        a=b;
+        b=0;
+      }
+      else {
+        a=0;
+      }
+    }
+
+    if (op=== undefined || op==="") { 
+      return b;
+    }
+
+    switch (op) {
+    case "+": 
+    return add(a,b);
+    break;
+    case "-":
+    return subtract(a,b);
+    break;
+    case "x":
+    return multiply(a,b);
+    break;
+    case "/":
+    return divide(a,b);
+    break;
+    default:
+    return "Error";
+    break;
+    }
+};
+
+//declare/initialize variables
+let displayVal="0";
+let input1=0;
+let input2=0;
+let op;
+let result; 
+let lastKey="AC";
+let decCounter=0;
+let equalCounter=0;
+let output= document.getElementById("output");
+output.textContent= displayVal;
+
+//number keys
+const numKeys = document.querySelectorAll(".keys > *");
+numKeys.forEach((key) => {
+  if (key.id!=="percent"){
+  key.addEventListener("click", () => {
+  //if the last key was an operator
+    if (lastKey === "plus" || lastKey === "minus" || lastKey ==="mult" || lastKey ==="div" || lastKey ==="equals" || lastKey==="AC" || lastKey==="percent") {
+      clearDisplay();
+      displayVal= displayVal + key.textContent;
+      console.log(key.id);
+      removeClicked();
+      key.classList.toggle("clicked");
+      out();
+      lastKey=key.id;
+      equalCounter=0;
+    }
+//if the last key was not an operator
+    else {
+    if (key.id==="dec") {
+      decCounter++;
+    }
+    if (decCounter>=2) {
+      removeClicked();
+      key.classList.toggle("clicked");
+      op=key.textContent;
+      input1 = parseFloat(displayVal);
+      lastKey=key.id;
+      displayVal="Error";
+      out();
+      decCounter=0;
+      equalCounter=0;
+    }
+    else {
+    displayVal= displayVal + key.textContent;
+    console.log(key.id);
+    removeClicked();
+    key.classList.toggle("clicked");
+    out();
+    lastKey=key.id;
+    equalCounter=0;
+    }
+    }
+  });
+  }
+});
+
+//percent key is a special case so on it's own
+let percentKey = document.getElementById("percent");
+percentKey.addEventListener("click", () => {
+  console.log("%");
+  removeClicked();
+  percentKey.classList.toggle("clicked");
+  lastKey=percentKey.id;
+
+  input2= parseFloat(displayVal); //added all this in
+  result = input2/100; 
+  console.log(result);
+  displayVal=result;
+  decCounter=0;
+  equalCounter=0;
+  
+  out();
+  lastKey=equalKey.id;
+});
+
+//operator keys
+const opKeys = document.querySelectorAll(".operations > *");
+opKeys.forEach((key) => {
+  if (key.id!== "AC" && key.id!=="equals"){
+  key.addEventListener("click", () => {
+    //if the last key was an operator
+if (lastKey === "plus" || lastKey === "minus" || lastKey ==="mult" || lastKey ==="div" || lastKey==="percent") {
+    removeClicked();
+    key.classList.toggle("clicked");
+    op=key.textContent;
+    input1 = parseFloat(displayVal);
+    lastKey=key.id;
+    displayVal="Error";
+    out();
+    equalCounter=0;
+
+}
+//if the last key was a number
+else {
+    equalCounter=0;
+    decCounter=0;
+    removeClicked();
+    key.classList.toggle("clicked");
+    result= operate(result,parseFloat(displayVal),op); 
+    console.log(result);
+    op=key.textContent;
+    input1 = result; 
+    lastKey=key.id;
+    displayVal=result; 
+    out(); 
+}
+  });
+  }
+});
+
+//All Clear and Equals special cases
+let allClear = document.getElementById("AC");
+allClear.addEventListener("click", () => {
+  console.log("AC");
+  removeClicked();
+  clearDisplay();
+  input1="";
+  input2="";
+  op="";
+  result="";
+  lastKey=allClear.id;
+  decCounter=0;
+  equalCounter=0;
+});
+
+let equalKey = document.getElementById("equals");
+equalKey.addEventListener("click", () => {
+  equalCounter++;
+  console.log("=");
+  removeClicked();
+  input2= parseFloat(displayVal);
+  result = operate(input1, input2, op); 
+  console.log(result);
+  if (isNaN(result) || result===undefined) {
+    result="";
+    console.log(result);
+  }
+  if (equalCounter>=2) {
+    result=displayVal;
+  }
+  displayVal=result;
+  decCounter=0;
+  result=""; 
+  out();
+  lastKey=equalKey.id;
+});
+
+//helper functions
+function removeClicked () {
+let stillClicked = document.getElementsByClassName("clicked");
+while (stillClicked.length)
+    stillClicked[0].classList.remove("clicked");
+};
+
+function out () {
+  output.textContent= displayVal;
+}
+
+function clearDisplay() {
+  displayVal="";
+  out();
+}
+
+// function clearAll () {
+//   console.log("AC");
+//   removeClicked();
+//   input1="";
+//   input2="";
+//   op="";
+//   result="";
+//   lastKey=allClear.id;
+//   decCounter=0;
+//   equalCounter=0;
+// }
+
+</script>
+
+
+</body>
+</html>

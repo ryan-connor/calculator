@@ -1,0 +1,1 @@
+Intro project to make a basic calculator using JavaScript, CSS, and HTML. The calculator can perform basic math functions (+,-,*,/,%) and has additional buttons for All Clear, and decimals values.

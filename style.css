@@ -86,8 +86,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    /* margin: 10px 0 0 0; */
-}
+    margin: 10px 0 0 0;
+} 
 
 #display {
     border: solid 1px black;
@@ -109,7 +109,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
 
-}
+} 
 
 #equals {
     grid-column: 1 / span 2;
@@ -124,4 +124,4 @@
 .clicked {
     border: solid 1px white;
     box-shadow: 0 0 6px 3px #acacac;
-}
+} 

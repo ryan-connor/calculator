@@ -1,3 +1,8 @@
+<h4 align="center">
+<img alt="Calculator Gif" src="demo/Calculator.gif" height="350px">
+<img alt="Calculator Image" src="demo/Calculator.png" height="350px">
+</h4>
+
 ## Calculator
 
 Calculator that can perform basic math functions (+,-,*,/,%).
